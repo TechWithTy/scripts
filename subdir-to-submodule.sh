@@ -1,38 +1,25 @@
 #!/bin/bash
 set -e
 
-if [ -z "$1" ]; then
-  echo "Usage: $0 <github-username>"
-  exit 1
-fi
+# Get the current subdirectory name
+SUBDIR=$(basename \"$PWD\")
+PARENTDIR=$(dirname \"$PWD\")
 
-GITHUB_USER="$1"
-SUBDIR=$(basename "$PWD")
-PARENTDIR=$(dirname "$PWD")
+# Create a new public GitHub repo (assumes you want the same name as the folder)
+gh repo create \"$SUBDIR\" --public --source=. --remote=origin --push
 
+# Remove any existing .git in the subdir
 rm -rf .git
+
+# Re-init, add, and push to the new repo
 git init
+git remote add origin \"https://github.com/YOUR_GITHUB_USERNAME/$SUBDIR.git\"
 git add .
-git commit -m "Initial commit for submodule"
+git commit -m \"Initial commit for submodule\"
 git branch -M main
-
-# Check if repo exists on GitHub
-if gh repo view "$GITHUB_USER/$SUBDIR" > /dev/null 2>&1; then
-  echo "Repo $GITHUB_USER/$SUBDIR already exists. Skipping creation."
-else
-  gh repo create "$SUBDIR" --public --source=. --remote=origin --push --owner "$GITHUB_USER"
-fi
-
-git remote remove origin 2>/dev/null || true
-git remote add origin "https://github.com/$GITHUB_USER/$SUBDIR.git"
 git push -u origin main
 
-cd "$PARENTDIR"
-git submodule add "https://github.com/$GITHUB_USER/$SUBDIR.git" "$SUBDIR"
-git commit -am "Add $SUBDIR as submodule"
-
-How to use the new script:
-
-# !How to use bash
-# CopyInsert in Terminal
-# bash ../../scripts/subdir-to-submodule.sh YOUR_GITHUB_USERNAME
+# Go to parent and add as submodule
+cd \"$PARENTDIR\"
+git submodule add \"https://github.com/YOUR_GITHUB_USERNAME/$SUBDIR.git\" \"$SUBDIR\"
+git commit -am \"Add $SUBDIR as submodule\"
