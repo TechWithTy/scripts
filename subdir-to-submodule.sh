@@ -23,3 +23,6 @@ git push -u origin main
 cd \"$PARENTDIR\"
 git submodule add \"https://github.com/YOUR_GITHUB_USERNAME/$SUBDIR.git\" \"$SUBDIR\"
 git commit -am \"Add $SUBDIR as submodule\"
+
+# Example
+# ./util_scripts/subdir-to-submodule.sh -u "TechWithTy" -d "backend/utils"
