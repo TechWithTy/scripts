@@ -56,3 +56,5 @@ git submodule add "https://github.com/$GITHUB_USER/$SUBDIR.git" "$TARGET_DIR"
 git commit -am "Add $SUBDIR as submodule"
 
 echo "Successfully converted $SUBDIR to a submodule"
+
+export HOME="/c/Users/tyriq" && ./subdir-to-submodule.sh -u your_github_username -d ../backend/app/core/celery
