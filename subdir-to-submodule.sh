@@ -49,6 +49,7 @@ validate_boolean() {
 # Set defaults
 REPO_NAME="${REPO_NAME:-$(basename "$TARGET_DIR")}"
 PROJECT_ROOT="$(pwd)"
+WEBSITE_URL="${WEBSITE_URL:-www.cybershoptech.com}"
 
 # Optimized error handling
 handle_error() {
@@ -167,6 +168,12 @@ convert_to_submodule() {
 
   # Return and add submodule
   cd "$PROJECT_ROOT"
+  if git ls-files --error-unmatch "$TARGET_DIR" &>/dev/null; then
+    echo "↪ Directory exists in Git index - removing..."
+    git rm -r --cached "$TARGET_DIR"
+    git commit -m "Remove existing $TARGET_DIR before submodule conversion" --quiet
+  fi
+
   git submodule add --force "https://github.com/$GITHUB_USER/$REPO_NAME.git" "$TARGET_DIR"
   
   # Verify update
