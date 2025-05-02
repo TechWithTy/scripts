@@ -126,9 +126,13 @@ convert_to_submodule() {
       --remote=origin \
       --push
     
-    # Explicitly rename branch to main if needed
+    # Ensure main branch exists and delete master if present
     git branch -M main 2>/dev/null || true
     git push -u origin main --force
+    if git show-ref --verify --quiet refs/heads/master; then
+      git push origin --delete master
+      git branch -D master
+    fi
     
     # Set metadata
     [[ -n "$PROJECT_DESC" ]] && \
