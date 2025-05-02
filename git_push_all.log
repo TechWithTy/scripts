@@ -1,4 +1,4 @@
-=== Git Operations Started Fri, May  2, 2025  4:01:11 AM ===
+=== Git Operations Started Fri, May  2, 2025  4:06:16 AM ===
 
 Processing main repo: C:/Users/tyriq/Documents/Github/lead_ignite_backend_3.0
 Git reference: refs/heads/main
@@ -13,4 +13,4 @@ Processing submodule: C:/Users/tyriq/Documents/Github/lead_ignite_backend_3.0/ba
 No changes to commit
 
 Processing submodule: C:/Users/tyriq/Documents/Github/lead_ignite_backend_3.0/util_scripts
-Git reference: b85d416
+Git reference: 0806402
