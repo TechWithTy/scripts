@@ -1,5 +1,16 @@
-=== Starting git operations at Fri, May  2, 2025  3:55:48 AM ===
-\nProcessing C:/Users/tyriq/Documents/Github/lead_ignite_backend_3.0
-Current branch: main
-Successfully pushed changes for C:/Users/tyriq/Documents/Github/lead_ignite_backend_3.0
-\n=== Git operations completed at Fri, May  2, 2025  3:56:00 AM ===
+=== Git Operations Started Fri, May  2, 2025  4:01:11 AM ===
+
+Processing main repo: C:/Users/tyriq/Documents/Github/lead_ignite_backend_3.0
+Git reference: refs/heads/main
+
+Processing submodule: C:/Users/tyriq/Documents/Github/lead_ignite_backend_3.0/backend/app/core/third_party_integrations/stripe
+ERROR: Cannot access repo
+
+Processing submodule: C:/Users/tyriq/Documents/Github/lead_ignite_backend_3.0/backend/app/core/third_party_integrations/supabase
+ERROR: Cannot access repo
+
+Processing submodule: C:/Users/tyriq/Documents/Github/lead_ignite_backend_3.0/backend/app/core/third_party_integrations/model_context_protocol
+No changes to commit
+
+Processing submodule: C:/Users/tyriq/Documents/Github/lead_ignite_backend_3.0/util_scripts
+Git reference: b85d416
