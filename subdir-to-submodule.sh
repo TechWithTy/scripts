@@ -99,28 +99,47 @@ convert_to_submodule() {
     git remote remove origin 2>/dev/null || true
     git remote add origin "https://github.com/$GITHUB_USER/$REPO_NAME.git"
     
-    # Update website if provided
+    # Force push to main branch
+    git branch -M main
+    git push -u origin main --force
+    
+    # Update metadata
     if [[ -n "$WEBSITE_URL" ]]; then
       echo " Updating repository website to: $WEBSITE_URL"
       gh repo edit "$GITHUB_USER/$REPO_NAME" --homepage "$WEBSITE_URL"
     fi
     
-    configure_repo "$GITHUB_USER/$REPO_NAME"
-  else
-    # Create repo first
-    local create_cmd="gh repo create \"$GITHUB_USER/$REPO_NAME\" --public --source=. --remote=origin --push"
-    [[ -n "$PROJECT_DESC" ]] && create_cmd+=" --description \"$PROJECT_DESC\""
-    [[ -n "$WEBSITE_URL" ]] && create_cmd+=" --homepage \"$WEBSITE_URL\""
-    
-    echo " Creating new repository with metadata"
-    eval "$create_cmd"
-    
-    # Add tags separately if they exist
+    # Add topics reliably
     if [[ -n "$TAGS" ]]; then
       echo " Adding repository topics"
       gh repo edit "$GITHUB_USER/$REPO_NAME" \
         $(printf -- '--add-topic "%s" ' ${TAGS[@]}) \
-        || echo " Failed to add some topics"
+        || echo " Failed to add some topics (may need manual addition)"
+    fi
+    
+    configure_repo "$GITHUB_USER/$REPO_NAME"
+  else
+    echo "⚡ Creating new repository"
+    gh repo create "$GITHUB_USER/$REPO_NAME" \
+      --public \
+      --source=. \
+      --remote=origin \
+      --push
+    
+    # Explicitly rename branch to main if needed
+    git branch -M main 2>/dev/null || true
+    git push -u origin main --force
+    
+    # Set metadata
+    [[ -n "$PROJECT_DESC" ]] && \
+      gh repo edit "$GITHUB_USER/$REPO_NAME" --description "$PROJECT_DESC"
+    
+    # Add topics
+    if [[ -n "$TAGS" ]]; then
+      echo " Adding repository topics"
+      gh repo edit "$GITHUB_USER/$REPO_NAME" \
+        $(printf -- '--add-topic "%s" ' ${TAGS[@]}) \
+        || echo " Failed to add some topics (may need manual addition)"
     fi
     
     configure_repo "$GITHUB_USER/$REPO_NAME"
