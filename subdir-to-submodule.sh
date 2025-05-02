@@ -99,9 +99,9 @@ convert_to_submodule() {
     git remote remove origin 2>/dev/null || true
     git remote add origin "https://github.com/$GITHUB_USER/$REPO_NAME.git"
     
-    # Force push to main branch
-    git branch -M main
-    git push -u origin main --force
+    # Force push to master branch
+    git branch -M master
+    git push -u origin master --force
     
     # Update metadata
     if [[ -n "$WEBSITE_URL" ]]; then
@@ -126,12 +126,19 @@ convert_to_submodule() {
       --remote=origin \
       --push
     
-    # Ensure main branch exists and delete master if present
-    git branch -M main 2>/dev/null || true
-    git push -u origin main --force
-    if git show-ref --verify --quiet refs/heads/master; then
-      git push origin --delete master
-      git branch -D master
+    # Ensure we're using master branch
+    git branch -M master 2>/dev/null || true
+    git push -u origin master --force
+    
+    # Delete main branch if it exists
+    if git show-ref --quiet refs/heads/main; then
+      echo "🧹 Cleaning up main branch"
+      git push origin --delete main 2>/dev/null || true
+      git branch -D main 2>/dev/null || true
+      
+      # Update default branch on GitHub
+      gh api -X PATCH "repos/$GITHUB_USER/$REPO_NAME" \
+        -f default_branch="master"
     fi
     
     # Set metadata
@@ -155,8 +162,8 @@ convert_to_submodule() {
   git remote add origin "https://github.com/$GITHUB_USER/$REPO_NAME.git"
   git add . >/dev/null
   git commit -m "Initial submodule commit" --quiet
-  git branch -M main
-  git push -uf origin main >/dev/null
+  git branch -M master
+  git push -uf origin master >/dev/null
 
   # Return and add submodule
   cd "$PROJECT_ROOT"
@@ -195,3 +202,14 @@ cat << 'EOF'
 ./subdir-to-submodule.sh -u techwithty -d path/to/dir \
   -H false -R false -s false
 EOF
+
+
+./util_scripts/subdir-to-submodule.sh \
+  -u TechWithTy \
+  -d backend/app/core/telemetry \
+  -r telemetry-utils \
+  -p "Application telemetry and monitoring utilities" \
+  -t "telemetry,monitoring,metrics,logging" \
+  -w "" \
+  -H true -R true -P false -D false \
+  -s false
