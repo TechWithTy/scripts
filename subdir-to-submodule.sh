@@ -1,6 +1,15 @@
 #!/bin/bash
 set -eo pipefail
 
+# Create logs directory if it doesn't exist
+LOG_DIR="$(dirname "$0")/logs"
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/submodule-conversion-$(date +%Y%m%d-%H%M%S).log"
+
+exec > >(tee -a "$LOG_FILE") 2>&1
+
+echo "Logging output to $LOG_FILE"
+
 # Enhanced parameter handling with feature flags and privacy option
 while getopts ":u:d:r:p:t:w:H:R:P:D:s:" opt; do
   case $opt in
@@ -25,8 +34,8 @@ done
 
 # Validate required params
 if [[ -z "$GITHUB_USER" || -z "$TARGET_DIR" ]]; then
-  echo "Usage: $0 -u github_username -d target_directory [-r repository_name] [-p description] [-t tag1,tag2,...] [-w website_url] [-H show_homepage] [-R show_releases] [-P show_packages] [-D show_deployments] [-s private_repo]"
-  echo "Max 20 tags allowed"
+  echo "Usage: $0 -u github_username -d target_directory [-r repository_name] [-p description] [-t tag1,tag2,...] [-w website_url] [-H show_homepage] [-R show_releases] [-P show_packages] [-D show_deployments] [-s private_repo]" | tee -a "$LOG_FILE"
+  echo "Max 20 tags allowed" | tee -a "$LOG_FILE"
   exit 1
 fi
 
@@ -54,7 +63,7 @@ WEBSITE_URL="${WEBSITE_URL:-www.cybershoptech.com}"
 # Optimized error handling
 handle_error() {
   local lineno=$1
-  echo "Error at line $lineno. Attempting cleanup..."
+  echo "Error at line $lineno. Attempting cleanup..." | tee -a "$LOG_FILE"
   cd "$PROJECT_ROOT" || exit 1
   exit 1
 }

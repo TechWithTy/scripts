@@ -9,7 +9,11 @@ ROOT_DIR=$(git rev-parse --show-toplevel 2>/dev/null)
 [ -z "$ROOT_DIR" ] && { echo "Error: Not in git repo" >&2; exit 1; }
 cd "$ROOT_DIR" || exit 1
 
-LOG_FILE="$SCRIPT_DIR/git_push_all.log"
+# Create logs directory if it doesn't exist
+mkdir -p "$SCRIPT_DIR/logs"
+
+# Use timestamp for unique log filename
+LOG_FILE="$SCRIPT_DIR/logs/git_push_$(date +'%Y%m%d_%H%M%S').log"
 COMMIT_MSG="${1:-Auto commit $(date +'%Y-%m-%d %H:%M:%S')}"
 
 echo "=== Git Operations Started $(date) ===" > "$LOG_FILE"
