@@ -1,0 +1,29 @@
+Logging output to ./util_scripts/logs/submodule-conversion-20250502-182501.log
+ Converting backend/app/core/locust_load_test to submodule locust-load-test
+warning: in the working copy of '_tests/_docs/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '_tests/performance_test.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docker/Dockerfile.locust', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'locustfile.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'run_distributed_locust.py', LF will be replaced by CRLF the next time Git touches it
+⚡ Creating new repository
+https://github.com/TechWithTy/locust-load-test
+branch 'master' set up to track 'origin/master'.
+To https://github.com/TechWithTy/locust-load-test.git
+ * [new branch]      HEAD -> master
+branch 'master' set up to track 'origin/master'.
+Everything up-to-date
+ Adding repository topics
+ Configuring repository features
+warning: in the working copy of '_tests/_docs/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '_tests/performance_test.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docker/Dockerfile.locust', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'locustfile.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'run_distributed_locust.py', LF will be replaced by CRLF the next time Git touches it
+To https://github.com/TechWithTy/locust-load-test.git
+ + 53dbe45...7fc7ee7 master -> master (forced update)
+Adding existing repo at 'backend/app/core/locust_load_test' to the index
+warning: in the working copy of '.gitmodules', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.gitmodules', LF will be replaced by CRLF the next time Git touches it
+ Successfully converted to submodule (locust-load-test)
