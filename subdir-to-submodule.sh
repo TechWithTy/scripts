@@ -2,7 +2,7 @@
 set -eo pipefail
 
 # Create logs directory if it doesn't exist
-LOG_DIR="$(dirname "$0")/logs"
+LOG_DIR="$(dirname "$0")/logs/subdir_to_submodule"
 mkdir -p "$LOG_DIR"
 LOG_FILE="$LOG_DIR/submodule-conversion-$(date +%Y%m%d-%H%M%S).log"
 

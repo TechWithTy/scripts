@@ -13,7 +13,7 @@ cd "$ROOT_DIR" || exit 1
 mkdir -p "$SCRIPT_DIR/logs"
 
 # Use timestamp for unique log filename
-LOG_FILE="$SCRIPT_DIR/logs/git_push_$(date +'%Y%m%d_%H%M%S').log"
+LOG_FILE="$SCRIPT_DIR/logs/git_push_all/git_push_$(date +'%Y%m%d_%H%M%S').log"
 COMMIT_MSG="${1:-Auto commit $(date +'%Y-%m-%d %H:%M:%S')}"
 
 echo "=== Git Operations Started $(date) ===" > "$LOG_FILE"
