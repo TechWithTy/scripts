@@ -83,24 +83,32 @@ configure_repo() {
   
   # Skip visibility changes for existing repos to avoid confirmation
   if [[ "$PRIVATE_REPO" ]]; then
-    echo "Updating repository configuration for $repo"
-    echo " - Website URL: ${WEBSITE_URL:-[not set]}"
-    echo " - Description: ${PROJECT_DESC:-[not set]}"
+    echo "✨ Updating repository configuration for $repo"
+    echo "   🌐 Website URL: ${WEBSITE_URL:-[not set]}"
+    echo "   📝 Description: ${PROJECT_DESC:-[not set]}"
+    echo "   🔄 Features:"
+    echo "     - Releases: ${SHOW_RELEASES:-true}"
+    echo "     - Discussions: ${SHOW_PACKAGES:-true}"
+    echo "     - Wiki: ${SHOW_DEPLOYMENTS:-true}"
     
     local cmd="gh repo edit $repo"
     [[ -n "$WEBSITE_URL" ]] && cmd+=" --homepage \"$WEBSITE_URL\""
     [[ -n "$PROJECT_DESC" ]] && cmd+=" --description \"$PROJECT_DESC\""
     
     # Only modify supported features
-    [[ "$SHOW_RELEASES" == "false" ]] && cmd+=" --enable-issues=false"
-    [[ "$SHOW_PACKAGES" == "false" ]] && cmd+=" --enable-projects=false"
+    [[ "$SHOW_RELEASES" == "false" ]] && cmd+=" --enable-releases=false"
+    [[ "$SHOW_PACKAGES" == "false" ]] && cmd+=" --enable-discussions=false"
     [[ "$SHOW_DEPLOYMENTS" == "false" ]] && cmd+=" --enable-wiki=false"
     
-    echo "Executing command: $cmd"
-    eval "$cmd"
-    echo "Repository configuration updated successfully"
+    echo "🚀 Executing: $cmd"
+    if eval "$cmd"; then
+      echo "✅ Successfully updated repository configuration"
+    else
+      echo "❌ Failed to update some repository settings"
+      echo "   Some features may need manual configuration via GitHub UI"
+    fi
   else
-    echo "Skipping repository configuration (PRIVATE_REPO not set)"
+    echo "⏭️  Skipping repository configuration (PRIVATE_REPO not set)"
   fi
 }
 
