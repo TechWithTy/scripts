@@ -7,6 +7,7 @@ success_count=0
 failure_count=0
 up_to_date_count=0
 total_repos=0
+untracked_count=0
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR=$(git rev-parse --show-toplevel 2>/dev/null)
@@ -37,10 +38,18 @@ git_process_repo() {
         return 1
     fi
 
+    # Skip paths that are not valid git repos (broken submodules)
+    if ! git -C "$repo_path" rev-parse --git-dir > /dev/null 2>&1; then
+        echo "Skipping non-git path: $repo_path" | tee -a "$LOG_FILE"
+        up_to_date_count=$((up_to_date_count+1))
+        return 0
+    fi
+
     # Detect submodule-only changes
     all_changes=$(git status --porcelain)
     ignored_changes=$(git status --porcelain --ignore-submodules=dirty)
     if [ -z "$ignored_changes" ] && [ -n "$all_changes" ]; then
+        untracked_count=$((untracked_count+1))
         echo "ERROR: Untracked submodule commits detected in $repo_type:" | tee -a "$LOG_FILE"
         echo "$all_changes" | tee -a "$LOG_FILE"
         echo "To fix: cd $repo_path/<submodule-path> && git add ., git commit -m '<message>'" | tee -a "$LOG_FILE"
@@ -83,3 +92,4 @@ echo "Total repos: $total_repos" | tee -a "$LOG_FILE"
 echo "  -Committed/Pushed: $success_count" | tee -a "$LOG_FILE"
 echo "  -Up-to-date:       $up_to_date_count" | tee -a "$LOG_FILE"
 echo "  -Failures:         $failure_count" | tee -a "$LOG_FILE"
+echo "  -Untracked:        $untracked_count" | tee -a "$LOG_FILE"
