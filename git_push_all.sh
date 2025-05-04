@@ -26,6 +26,9 @@ echo "=== Git Operations Started $(date) ===" > "$LOG_FILE"
 
 # Git operations function
 git_process_repo() {
+    # Save original working dir; restore on function exit
+    local orig_dir="$PWD"
+    trap 'cd "$orig_dir"' RETURN
     local repo_path="$1"
     local repo_type="$2"
     total_repos=$((total_repos+1))
@@ -45,16 +48,23 @@ git_process_repo() {
         return 0
     fi
 
+    # Determine branch or commit for submodule
+    local git_ref=$(git symbolic-ref -q HEAD || git rev-parse --short HEAD)
+
     # Detect submodule-only changes
     all_changes=$(git status --porcelain)
     ignored_changes=$(git status --porcelain --ignore-submodules=dirty)
     if [ -z "$ignored_changes" ] && [ -n "$all_changes" ]; then
         untracked_count=$((untracked_count+1))
-        echo "ERROR: Untracked submodule commits detected in $repo_type:" | tee -a "$LOG_FILE"
-        echo "$all_changes" | tee -a "$LOG_FILE"
-        echo "To fix: cd $repo_path/<submodule-path> && git add ., git commit -m '<message>'" | tee -a "$LOG_FILE"
-        failure_count=$((failure_count+1))
-        return 1
+        echo "INFO: Auto committing submodule-only changes in $repo_type" | tee -a "$LOG_FILE"
+        if git add . && git commit -m "$COMMIT_MSG" && git push origin "${git_ref#refs/heads/}"; then
+            success_count=$((success_count+1))
+            echo "Successfully auto-updated submodule in $repo_type" | tee -a "$LOG_FILE"
+        else
+            failure_count=$((failure_count+1))
+            echo "ERROR: Auto commit failed in $repo_type" | tee -a "$LOG_FILE"
+        fi
+        return 0
     fi
 
     # Check for changes
@@ -65,7 +75,7 @@ git_process_repo() {
     fi
 
     # Get branch or commit
-    local git_ref=$(git symbolic-ref -q HEAD || git rev-parse --short HEAD)
+    git_ref=$(git symbolic-ref -q HEAD || git rev-parse --short HEAD)
     echo "Git reference: $git_ref" | tee -a "$LOG_FILE"
 
     # Execute git operations
