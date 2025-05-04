@@ -20,9 +20,17 @@ mkdir -p "$SCRIPT_DIR/logs"
 
 # Use timestamp for unique log filename
 LOG_FILE="$SCRIPT_DIR/logs/git_push_all/git_push_$(date +'%Y%m%d_%H%M%S').log"
+SUBMODULES_ONLY=false
+if [ "$1" = "--submodules-only" ] || [ "$1" = "-s" ]; then
+    SUBMODULES_ONLY=true
+    shift
+fi
 COMMIT_MSG="${1:-Auto commit $(date +'%Y-%m-%d %H:%M:%S')}"
 
 echo "=== Git Operations Started $(date) ===" > "$LOG_FILE"
+# One-time sync/update all submodules recursively
+git submodule sync --recursive 2>&1 | tee -a "$LOG_FILE"
+git submodule update --init --recursive 2>&1 | tee -a "$LOG_FILE"
 
 # Git operations function
 git_process_repo() {
@@ -41,11 +49,12 @@ git_process_repo() {
         return 1
     fi
 
-    # Attempt to sync and init broken submodules
+    # Attempt to sync broken submodule via relative path
+    local rel_path="${repo_path#$ROOT_DIR/}"
     if [ -d "$repo_path" ] && ! git -C "$repo_path" rev-parse --git-dir > /dev/null 2>&1; then
-        echo "INFO: Syncing submodule at $repo_path" | tee -a "$LOG_FILE"
-        git submodule sync "$repo_path" 2>&1 | tee -a "$LOG_FILE"
-        git submodule update --init --recursive "$repo_path" 2>&1 | tee -a "$LOG_FILE"
+        echo "INFO: Syncing submodule: $rel_path" | tee -a "$LOG_FILE"
+        git -C "$ROOT_DIR" submodule sync -- "$rel_path" 2>&1 | tee -a "$LOG_FILE"
+        git -C "$ROOT_DIR" submodule update --init --recursive -- "$rel_path" 2>&1 | tee -a "$LOG_FILE"
     fi
 
     # Skip paths that are not valid git repos (broken submodules)
@@ -96,7 +105,11 @@ git_process_repo() {
 }
 
 # Process main repo
-git_process_repo "$ROOT_DIR" "main repo"
+if [ "$SUBMODULES_ONLY" = false ]; then
+    git_process_repo "$ROOT_DIR" "main repo"
+else
+    echo "Skipping main repo due to submodules-only flag" | tee -a "$LOG_FILE"
+fi
 
 # Process submodules - robust parsing of .gitmodules
 while IFS= read -r sub_path; do
