@@ -215,6 +215,8 @@ convert_to_submodule
 repo_url="https://github.com/$GITHUB_USER/$REPO_NAME"
 echo "🔍 Repository Details:"
 echo "   🔗 URL: $repo_url"
+echo "   👁️  Visibility: $(gh repo view $GITHUB_USER/$REPO_NAME --json visibility -q '.visibility' 2>/dev/null || echo '[unavailable]')"
+echo "   🌿 Branch: $(git -C "$TARGET_DIR" branch --show-current 2>/dev/null || echo '[unavailable]')"
 echo "   📌 Description: $(gh repo view $GITHUB_USER/$REPO_NAME --json description -q '.description' 2>/dev/null || echo '[unavailable]')"
 echo "   🏷️  Topics: $(gh repo view $GITHUB_USER/$REPO_NAME --json repositoryTopics -q '.repositoryTopics[].name' 2>/dev/null | tr '\n' ' ' || echo '[unavailable]')"
 echo "   🛠️  Features:"
