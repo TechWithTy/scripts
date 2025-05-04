@@ -37,8 +37,19 @@ git_process_repo() {
         return 1
     fi
 
+    # Detect submodule-only changes
+    all_changes=$(git status --porcelain)
+    ignored_changes=$(git status --porcelain --ignore-submodules=dirty)
+    if [ -z "$ignored_changes" ] && [ -n "$all_changes" ]; then
+        echo "ERROR: Untracked submodule commits detected in $repo_type:" | tee -a "$LOG_FILE"
+        echo "$all_changes" | tee -a "$LOG_FILE"
+        echo "To fix: cd $repo_path/<submodule-path> && git add ., git commit -m '<message>'" | tee -a "$LOG_FILE"
+        failure_count=$((failure_count+1))
+        return 1
+    fi
+
     # Check for changes
-    if [ -z "$(git status --porcelain)" ]; then
+    if [ -z "$(git status --porcelain --ignore-submodules=dirty)" ]; then
         echo "No changes to commit" | tee -a "$LOG_FILE"
         up_to_date_count=$((up_to_date_count+1))
         return 0
@@ -69,6 +80,6 @@ done < <(git config --file .gitmodules --get-regexp path | awk '{print $2}')
 echo -e "\n=== Git Operations Completed $(date) ===" | tee -a "$LOG_FILE"
 echo -e "\n=== Summary ===" | tee -a "$LOG_FILE"
 echo "Total repos: $total_repos" | tee -a "$LOG_FILE"
-echo "  Committed/Pushed: $success_count" | tee -a "$LOG_FILE"
-echo "  Up-to-date:       $up_to_date_count" | tee -a "$LOG_FILE"
-echo "  Failures:         $failure_count" | tee -a "$LOG_FILE"
+echo "  -Committed/Pushed: $success_count" | tee -a "$LOG_FILE"
+echo "  -Up-to-date:       $up_to_date_count" | tee -a "$LOG_FILE"
+echo "  -Failures:         $failure_count" | tee -a "$LOG_FILE"
