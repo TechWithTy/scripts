@@ -39,7 +39,12 @@ if [[ -z "$GITHUB_USER" || -z "$TARGET_DIR" ]]; then
   exit 1
 fi
 
-# Validate boolean flags
+# Truncate description to 200 characters if needed
+if [[ -n "$PROJECT_DESC" ]]; then
+  PROJECT_DESC="${PROJECT_DESC:0:200}"
+fi
+
+# Validate boolean parameters
 validate_boolean() {
   local value="$1"
   local name="$2"
@@ -58,7 +63,7 @@ validate_boolean() {
 # Set defaults
 REPO_NAME="${REPO_NAME:-$(basename "$TARGET_DIR")}"
 PROJECT_ROOT="$(pwd)"
-WEBSITE_URL="${WEBSITE_URL:-www.cybershoptech.com}"
+WEBSITE_URL="${WEBSITE_URL:-https://www.cybershoptech.com}"
 
 # Optimized error handling
 handle_error() {
