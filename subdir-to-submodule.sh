@@ -81,32 +81,25 @@ trap 'handle_error $LINENO' ERR
 configure_repo() {
   local repo="$1"
   
-  # Skip visibility changes for existing repos to avoid confirmation
   if [[ "$PRIVATE_REPO" ]]; then
     echo "✨ Updating repository configuration for $repo"
-    echo "   🌐 Website URL: ${WEBSITE_URL:-[not set]}"
-    echo "   📝 Description: ${PROJECT_DESC:-[not set]}"
-    echo "   🔄 Features:"
-    echo "     - Releases: ${SHOW_RELEASES:-true}"
-    echo "     - Discussions: ${SHOW_PACKAGES:-true}"
-    echo "     - Wiki: ${SHOW_DEPLOYMENTS:-true}"
     
-    local cmd="gh repo edit $repo"
-    [[ -n "$WEBSITE_URL" ]] && cmd+=" --homepage \"$WEBSITE_URL\""
-    [[ -n "$PROJECT_DESC" ]] && cmd+=" --description \"$PROJECT_DESC\""
+    # Basic settings
+    echo "🚀 Setting basic repository settings"
+    gh repo edit "$repo" \
+      ${WEBSITE_URL:+--homepage "$WEBSITE_URL"} \
+      ${PROJECT_DESC:+--description "$PROJECT_DESC"} \
+      --enable-discussions \
+      --enable-wiki
     
-    # Only modify supported features
-    [[ "$SHOW_RELEASES" == "false" ]] && cmd+=" --enable-releases=false"
-    [[ "$SHOW_PACKAGES" == "false" ]] && cmd+=" --enable-discussions=false"
-    [[ "$SHOW_DEPLOYMENTS" == "false" ]] && cmd+=" --enable-wiki=false"
+    # Releases requires API call
+    echo "🚀 Configuring releases via API"
+    gh api -X PATCH "repos/$repo" -f has_releases=true
     
-    echo "🚀 Executing: $cmd"
-    if eval "$cmd"; then
-      echo "✅ Successfully updated repository configuration"
-    else
-      echo "❌ Failed to update some repository settings"
-      echo "   Some features may need manual configuration via GitHub UI"
-    fi
+    echo "✅ Repository features enabled:"
+    echo "   - 📦 Releases (via API)"
+    echo "   - 💬 Discussions"
+    echo "   - 📚 Wiki"
   else
     echo "⏭️  Skipping repository configuration (PRIVATE_REPO not set)"
   fi
@@ -212,11 +205,22 @@ convert_to_submodule() {
   [[ -f .gitmodules ]] && git add .gitmodules
   git commit -m "Add $REPO_NAME submodule" --quiet
   
-  echo " Successfully converted to submodule (${REPO_NAME})"
+  echo " ✅ Successfully converted to submodule (${REPO_NAME})"
 }
 
 # Execute
 convert_to_submodule
+
+# Final debug output
+repo_url="https://github.com/$GITHUB_USER/$REPO_NAME"
+echo "🔍 Repository Details:"
+echo "   🔗 URL: $repo_url"
+echo "   📌 Description: $(gh repo view $GITHUB_USER/$REPO_NAME --json description -q '.description' 2>/dev/null || echo '[unavailable]')"
+echo "   🏷️  Topics: $(gh repo view $GITHUB_USER/$REPO_NAME --json repositoryTopics -q '.repositoryTopics[].name' 2>/dev/null | tr '\n' ' ' || echo '[unavailable]')"
+echo "   🛠️  Features:"
+echo "     - 💬 Discussions: $(gh repo view $GITHUB_USER/$REPO_NAME --json hasDiscussionsEnabled -q '.hasDiscussionsEnabled' 2>/dev/null || echo '[unavailable]')"
+echo "     - 📚 Wiki: $(gh repo view $GITHUB_USER/$REPO_NAME --json hasWikiEnabled -q '.hasWikiEnabled' 2>/dev/null || echo '[unavailable]')"
+
 exit 0
 
 # Add comprehensive usage examples
