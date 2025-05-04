@@ -3,6 +3,11 @@
 # Robust git push script for main repo and submodules
 # Usage: ./git_push_all.sh ["commit message"]
 
+success_count=0
+failure_count=0
+up_to_date_count=0
+total_repos=0
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR=$(git rev-parse --show-toplevel 2>/dev/null)
 
@@ -22,17 +27,20 @@ echo "=== Git Operations Started $(date) ===" > "$LOG_FILE"
 git_process_repo() {
     local repo_path="$1"
     local repo_type="$2"
+    total_repos=$((total_repos+1))
     
     echo -e "\nProcessing $repo_type: $repo_path" | tee -a "$LOG_FILE"
     
     if ! cd "$repo_path" 2>/dev/null; then
         echo "ERROR: Cannot access repo" | tee -a "$LOG_FILE"
+        failure_count=$((failure_count+1))
         return 1
     fi
 
     # Check for changes
     if [ -z "$(git status --porcelain)" ]; then
         echo "No changes to commit" | tee -a "$LOG_FILE"
+        up_to_date_count=$((up_to_date_count+1))
         return 0
     fi
 
@@ -41,10 +49,13 @@ git_process_repo() {
     echo "Git reference: $git_ref" | tee -a "$LOG_FILE"
 
     # Execute git operations
-    git add . && \
-    git commit -m "$COMMIT_MSG" && \
-    { [[ "$git_ref" != "HEAD"* ]] && git push origin "${git_ref#refs/heads/}"; true; } && \
-    echo "Successfully updated $repo_type" | tee -a "$LOG_FILE"
+    if git add . && git commit -m "$COMMIT_MSG" && { [[ "$git_ref" != "HEAD"* ]] && git push origin "${git_ref#refs/heads/}"; }; then
+        success_count=$((success_count+1))
+        echo "Successfully updated $repo_type" | tee -a "$LOG_FILE"
+    else
+        failure_count=$((failure_count+1))
+        echo "ERROR: Failed to update $repo_type" | tee -a "$LOG_FILE"
+    fi
 }
 
 # Process main repo
@@ -56,3 +67,8 @@ while IFS= read -r sub_path; do
 done < <(git config --file .gitmodules --get-regexp path | awk '{print $2}')
 
 echo -e "\n=== Git Operations Completed $(date) ===" | tee -a "$LOG_FILE"
+echo -e "\n=== Summary ===" | tee -a "$LOG_FILE"
+echo "Total repos: $total_repos" | tee -a "$LOG_FILE"
+echo "  Committed/Pushed: $success_count" | tee -a "$LOG_FILE"
+echo "  Up-to-date:       $up_to_date_count" | tee -a "$LOG_FILE"
+echo "  Failures:         $failure_count" | tee -a "$LOG_FILE"
