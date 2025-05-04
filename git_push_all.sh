@@ -41,6 +41,13 @@ git_process_repo() {
         return 1
     fi
 
+    # Attempt to sync and init broken submodules
+    if [ -d "$repo_path" ] && ! git -C "$repo_path" rev-parse --git-dir > /dev/null 2>&1; then
+        echo "INFO: Syncing submodule at $repo_path" | tee -a "$LOG_FILE"
+        git submodule sync "$repo_path" 2>&1 | tee -a "$LOG_FILE"
+        git submodule update --init --recursive "$repo_path" 2>&1 | tee -a "$LOG_FILE"
+    fi
+
     # Skip paths that are not valid git repos (broken submodules)
     if ! git -C "$repo_path" rev-parse --git-dir > /dev/null 2>&1; then
         echo "Skipping non-git path: $repo_path" | tee -a "$LOG_FILE"
