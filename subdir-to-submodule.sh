@@ -41,7 +41,9 @@ fi
 
 # Truncate description to 200 characters if needed
 if [[ -n "$PROJECT_DESC" ]]; then
+  echo "Truncating project description from ${#PROJECT_DESC} characters to 200"
   PROJECT_DESC="${PROJECT_DESC:0:200}"
+  echo "Truncated description: $PROJECT_DESC"
 fi
 
 # Validate boolean parameters
@@ -81,16 +83,24 @@ configure_repo() {
   
   # Skip visibility changes for existing repos to avoid confirmation
   if [[ "$PRIVATE_REPO" ]]; then
+    echo "Updating repository configuration for $repo"
+    echo " - Website URL: ${WEBSITE_URL:-[not set]}"
+    echo " - Description: ${PROJECT_DESC:-[not set]}"
+    
     local cmd="gh repo edit $repo"
     [[ -n "$WEBSITE_URL" ]] && cmd+=" --homepage \"$WEBSITE_URL\""
+    [[ -n "$PROJECT_DESC" ]] && cmd+=" --description \"$PROJECT_DESC\""
     
     # Only modify supported features
     [[ "$SHOW_RELEASES" == "false" ]] && cmd+=" --enable-issues=false"
     [[ "$SHOW_PACKAGES" == "false" ]] && cmd+=" --enable-projects=false"
     [[ "$SHOW_DEPLOYMENTS" == "false" ]] && cmd+=" --enable-wiki=false"
     
-    echo " Configuring repository features"
+    echo "Executing command: $cmd"
     eval "$cmd"
+    echo "Repository configuration updated successfully"
+  else
+    echo "Skipping repository configuration (PRIVATE_REPO not set)"
   fi
 }
 
