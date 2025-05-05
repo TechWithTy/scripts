@@ -15,8 +15,8 @@ ROOT_DIR=$(git rev-parse --show-toplevel 2>/dev/null)
 [ -z "$ROOT_DIR" ] && { echo "Error: Not in git repo" >&2; exit 1; }
 cd "$ROOT_DIR" || exit 1
 
-# Create logs directory if it doesn't exist
-mkdir -p "$SCRIPT_DIR/logs"
+# Create logs and git_push_all subdirectory if they don't exist
+mkdir -p "$SCRIPT_DIR/logs/git_push_all"
 
 # Use timestamp for unique log filename
 LOG_FILE="$SCRIPT_DIR/logs/git_push_all/git_push_$(date +'%Y%m%d_%H%M%S').log"
