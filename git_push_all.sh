@@ -116,6 +116,26 @@ while IFS= read -r sub_path; do
     [ -n "$sub_path" ] && git_process_repo "$ROOT_DIR/$sub_path" "submodule"
 done < <(git config --file .gitmodules --get-regexp path | awk '{print $2}')
 
+# --- PREVENT DATA LOSS: Warn if there are local changes that would be overwritten ---
+# Check for uncommitted changes in all submodules before finishing
+uncommitted=0
+while IFS= read -r sub_path; do
+    if [ -n "$sub_path" ]; then
+        if ! git -C "$ROOT_DIR/$sub_path" diff --quiet --ignore-submodules=all || ! git -C "$ROOT_DIR/$sub_path" diff --cached --quiet --ignore-submodules=all; then
+            echo "WARNING: Uncommitted changes detected in $sub_path! Please commit or stash them to avoid data loss." | tee -a "$LOG_FILE"
+            uncommitted=1
+        fi
+    fi
+done < <(git config --file .gitmodules --get-regexp path | awk '{print $2}')
+if ! git diff --quiet --ignore-submodules=all || ! git diff --cached --quiet --ignore-submodules=all; then
+    echo "WARNING: Uncommitted changes detected in main repo! Please commit or stash them to avoid data loss." | tee -a "$LOG_FILE"
+    uncommitted=1
+fi
+if [ "$uncommitted" -eq 1 ]; then
+    echo "ERROR: Uncommitted changes exist in one or more repos. Aborting to prevent data loss." | tee -a "$LOG_FILE"
+    exit 1
+fi
+
 echo -e "\n=== Git Operations Completed $(date) ===" | tee -a "$LOG_FILE"
 echo -e "\n=== Summary ===" | tee -a "$LOG_FILE"
 echo "Total repos: $total_repos" | tee -a "$LOG_FILE"
@@ -123,3 +143,11 @@ echo "  -Committed/Pushed: $success_count" | tee -a "$LOG_FILE"
 echo "  -Up-to-date:       $up_to_date_count" | tee -a "$LOG_FILE"
 echo "  -Failures:         $failure_count" | tee -a "$LOG_FILE"
 echo "  -Untracked:        $untracked_count" | tee -a "$LOG_FILE"
+echo "See log for details: $LOG_FILE"
+if (( failure_count > 0 )); then
+  echo "Some repositories failed to update. Check the log for details."
+  exit 1
+else
+  echo "All repositories updated successfully."
+  exit 0
+fi
