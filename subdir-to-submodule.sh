@@ -230,15 +230,24 @@ echo "     - 📚 Wiki: $(gh repo view $GITHUB_USER/$REPO_NAME --json hasWikiEna
 
 cat << 'EOF'
 
-# USAGE EXAMPLES:
-# 1. Basic public submodule
-./subdir-to-submodule.sh -u techwithty -d path/to/dir
-# 2. Private repository with website
-./subdir-to-submodule.sh -u techwithty -d path/to/dir -s true -w "https://example.com"
-# 3. Full featured private repo
-./subdir-to-submodule.sh -u techwithty -d path/to/dir -r custom-name -p "Project description" -t "python,database,utils" -w "https://example.com" -H true -R true -P false -D true -s true
-# 4. Existing repo with updated settings
-./subdir-to-submodule.sh -u techwithty -d path/to/dir -H false -R false -s false
-# 5. Parallel submodule conversion for multiple directories
-./subdir-to-submodule.sh -u techwithty -d path/to/dir1,path/to/dir2 -z
 EOF
+
+# USAGE EXAMPLES:
+# # 1. Basic public submodule
+# ./subdir-to-submodule.sh -u techwithty -d path/to/dir
+# # 2. Private repository with website
+# ./subdir-to-submodule.sh -u techwithty -d path/to/dir -s true -w "https://example.com"
+# # 3. Full featured private repo
+# ./subdir-to-submodule.sh -u techwithty -d path/to/dir -r custom-name -p "Project description" -t "python,database,utils" -w "https://example.com" -H true -R true -P false -D true -s true
+# # 4. Existing repo with updated settings
+# ./subdir-to-submodule.sh -u techwithty -d path/to/dir -H false -R false -s false
+# # 5. Parallel submodule conversion for multiple directories
+# ./subdir-to-submodule.sh -u techwithty -d path/to/dir1,path/to/dir2 -z
+
+# ./util_scripts/subdir-to-submodule.sh \
+#   -u techwithty \
+#   -d backend/app/core/tempo \
+#   -s false \
+#   -p "Tempo integration and tracing utilities for Python/FastAPI (Grafana Tempo, OpenTelemetry). Production-ready observability, mocking, and test scaffolding." \
+#   -w "https://www.cybershoptech.com" \
+#   -t "tracing,observability,opentelemetry,tempo,fastapi,python,distributed-tracing,monitoring,ci-cd,production-ready"
