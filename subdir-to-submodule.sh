@@ -120,7 +120,7 @@ configure_repo_features() {
 # Set defaults
 REPO_NAME="${REPO_NAME:-$(basename "${DIR_ARRAY[0]}")}"
 PROJECT_ROOT="$(pwd)"
-WEBSITE_URL="${WEBSITE_URL:-https://www.cybershoptech.com}"
+WEBSITE_URL="${WEBSITE_URL:-https://www.dealscale.io}"
 
 # Optimized error handling
 handle_error() {
@@ -249,5 +249,5 @@ EOF
 #   -d backend/app/core/tempo \
 #   -s false \
 #   -p "Tempo integration and tracing utilities for Python/FastAPI (Grafana Tempo, OpenTelemetry). Production-ready observability, mocking, and test scaffolding." \
-#   -w "https://www.cybershoptech.com" \
+#   -w "https://www.dealscale.io" \
 #   -t "tracing,observability,opentelemetry,tempo,fastapi,python,distributed-tracing,monitoring,ci-cd,production-ready"
