@@ -1,16 +1,12 @@
 /* Export categories from src/data/categories.ts to JSON for Strapi seeding */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 
 // Import the data
 import { categories } from "../src/data/categories";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 function main() {
-  const outPath = resolve(__dirname, "../content/strapi-export/categories.json");
+  const outPath = resolve(process.cwd(), "content/strapi-export/categories.json");
   mkdirSync(dirname(outPath), { recursive: true });
 
   // Write as a plain JSON array
