@@ -17,6 +17,28 @@ import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
 import { loadConfig, postItems } from "./strapi-utils";
 
+function parseFieldMap(src?: string): Record<string, string> {
+  if (!src) return {};
+  const map: Record<string, string> = {};
+  for (const pair of src.split(",")) {
+    const [from, to] = pair.split(":");
+    if (from && to) map[from.trim()] = to.trim();
+  }
+  return map;
+}
+
+function applyFieldMap(obj: any, map: Record<string, string>) {
+  if (!map || Object.keys(map).length === 0) return obj;
+  const out: any = { ...obj };
+  for (const [from, to] of Object.entries(map)) {
+    if (Object.prototype.hasOwnProperty.call(out, from)) {
+      out[to] = out[from];
+      delete out[from];
+    }
+  }
+  return out;
+}
+
 async function loadModuleData(modPath: string, expName?: string): Promise<unknown[]> {
   const abs = resolve(process.cwd(), modPath);
   const mod = await import(pathToFileURL(abs).href);
@@ -49,6 +71,7 @@ async function main() {
   const MODULE = process.env.MODULE;
   const EXPORT = process.env.EXPORT;
   const DRY = process.env.DRY === "1" || process.env.DRY === "true";
+  const FIELD_MAP = parseFieldMap(process.env.FIELD_MAP);
 
   if (!MODULE) {
     throw new Error(
@@ -67,7 +90,8 @@ async function main() {
     return;
   }
 
-  await postItems(cfg, items);
+  const mapped = items.map((it) => applyFieldMap(it as any, FIELD_MAP));
+  await postItems(cfg, mapped);
 }
 
 main().catch((err) => {
