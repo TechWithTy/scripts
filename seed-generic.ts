@@ -17,6 +17,19 @@ import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
 import { loadConfig, postItems } from "./strapi-utils";
 
+function parseArgs(argv: string[]) {
+  const out: Record<string, string> = {};
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === "--module" && argv[i + 1]) out.MODULE = argv[++i];
+    else if (a === "--export" && argv[i + 1]) out.EXPORT = argv[++i];
+    else if (a === "--collection" && argv[i + 1]) out.COLLECTION = argv[++i];
+    else if (a === "--field-map" && argv[i + 1]) out.FIELD_MAP = argv[++i];
+    else if (a === "--dry") out.DRY = "1";
+  }
+  return out;
+}
+
 function parseFieldMap(src?: string): Record<string, string> {
   if (!src) return {};
   const map: Record<string, string> = {};
@@ -68,10 +81,11 @@ async function loadModuleData(modPath: string, expName?: string): Promise<unknow
 }
 
 async function main() {
-  const MODULE = process.env.MODULE;
-  const EXPORT = process.env.EXPORT;
-  const DRY = process.env.DRY === "1" || process.env.DRY === "true";
-  const FIELD_MAP = parseFieldMap(process.env.FIELD_MAP);
+  const flags = parseArgs(process.argv.slice(2));
+  const MODULE = flags.MODULE || process.env.MODULE;
+  const EXPORT = flags.EXPORT || process.env.EXPORT;
+  const DRY = flags.DRY === "1" || process.env.DRY === "1" || process.env.DRY === "true";
+  const FIELD_MAP = parseFieldMap(flags.FIELD_MAP || process.env.FIELD_MAP);
 
   if (!MODULE) {
     throw new Error(
@@ -79,7 +93,7 @@ async function main() {
     );
   }
 
-  const collection = process.env.STRAPI_COLLECTION || process.env.COLLECTION || "";
+  const collection = flags.COLLECTION || process.env.STRAPI_COLLECTION || process.env.COLLECTION || "";
   const cfg = loadConfig(collection);
 
   const items = await loadModuleData(MODULE, EXPORT);
