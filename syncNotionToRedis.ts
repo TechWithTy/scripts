@@ -46,6 +46,16 @@ export async function syncCampaigns() {
       if (page.properties) {
         const slug = page.properties.Slug?.title?.[0]?.plain_text;
         const destination = page.properties.Destination?.rich_text?.[0]?.plain_text;
+        const title = (page.properties.Title?.title?.[0]?.plain_text as string | undefined) || slug;
+        const description = page.properties.Description?.rich_text?.[0]?.plain_text as string | undefined;
+        const details = page.properties.Details?.rich_text?.[0]?.plain_text as string | undefined;
+        const iconEmoji = (page as any)?.icon?.emoji as string | undefined;
+        // try to resolve an image url from a property commonly named "Image" or "Thumbnail"
+        const imageProp = (page as any).properties?.Image || (page as any).properties?.Thumbnail;
+        let imageUrl: string | undefined = undefined;
+        if (imageProp?.type === 'url') imageUrl = imageProp.url as string | undefined;
+        if (!imageUrl && imageProp?.type === 'rich_text') imageUrl = imageProp.rich_text?.[0]?.plain_text as string | undefined;
+        if (!imageUrl && (page as any)?.cover?.external?.url) imageUrl = (page as any).cover.external.url as string;
         // Link Tree Enabled can be a checkbox or a select with values like "True"/"False"
         const lteProp = (page as any).properties?.["Link Tree Enabled"];
         let linkTreeEnabled = false;
@@ -54,6 +64,25 @@ export async function syncCampaigns() {
         } else if (lteProp?.type === 'select') {
           const name = (lteProp.select?.name ?? '').toString().toLowerCase();
           linkTreeEnabled = name === 'true' || name === 'yes' || name === 'enabled';
+        }
+        // Optional metadata
+        const category = (page as any).properties?.Category?.select?.name as string | undefined;
+        const pinned = Boolean(
+          ((page as any).properties?.Pinned?.checkbox as boolean | undefined) ||
+          (((page as any).properties?.Pinned as any)?.select?.name?.toString().toLowerCase() === 'true')
+        );
+        const videoUrl = (page as any).properties?.Video?.url as string | undefined;
+        // Files list
+        let files: Array<{ name: string; url: string }> | undefined;
+        const filesProp = (page as any).properties?.Files;
+        if (filesProp?.type === 'files' && Array.isArray(filesProp.files)) {
+          files = filesProp.files
+            .map((f: any) => {
+              if (f.type === 'file') return { name: f.name as string, url: f.file?.url as string };
+              if (f.type === 'external') return { name: f.name as string, url: f.external?.url as string };
+              return undefined;
+            })
+            .filter(Boolean) as Array<{ name: string; url: string }>;
         }
         const utm = {
           utm_source: page.properties.utm_source?.rich_text?.[0]?.plain_text,
@@ -66,7 +95,17 @@ export async function syncCampaigns() {
           await redis.hset(`campaign:${slug}`, { 
             destination, 
             utm,
-            linkTreeEnabled 
+            linkTreeEnabled,
+            title,
+            description,
+            details,
+            iconEmoji,
+            imageUrl,
+            category,
+            pinned,
+            videoUrl,
+            // store files as JSON string to be safe in hash field
+            files: files ? JSON.stringify(files) : undefined,
           });
           console.log(`Synced campaign: ${slug}`);
         } else {
