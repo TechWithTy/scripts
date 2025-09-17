@@ -24,7 +24,6 @@ import type {
 } from "../src/utils/notion/notionTypes";
 import { inferKind } from "../src/utils/notion/notionTypes";
 
-// TODO: Remove hardcoded values after conference
 export async function syncCampaigns() {
   const redis = new Redis({
     url: process.env.UPSTASH_REDIS_REST_URL,
@@ -70,7 +69,8 @@ export async function syncCampaigns() {
 
     for (const page of data.results as NotionPage[]) {
       const props = page.properties ?? {};
-      const slug = (props.Slug as NotionTitleProperty | undefined)?.title?.[0]?.plain_text;
+      const rawSlug = (props.Slug as NotionRichTextProperty | undefined)?.rich_text?.[0]?.plain_text;
+      const slug = rawSlug?.startsWith('/') ? rawSlug.substring(1) : rawSlug;
       const destination = (props.Destination as NotionRichTextProperty | undefined)?.rich_text?.[0]?.plain_text;
       // Support Notion "Title" property stored as rich_text or title
       const titleRich = (props.Title as NotionRichTextProperty | undefined)?.rich_text?.[0]?.plain_text as string | undefined;
