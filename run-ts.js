@@ -6,6 +6,7 @@
  */
 
 const { register } = require('ts-node');
+const path = require('node:path');
 
 // Register ts-node to handle TypeScript files
 register({
@@ -28,10 +29,17 @@ if (!tsFile) {
   process.exit(1);
 }
 
+// Resolve the file path relative to the project root
+const projectRoot = path.resolve(__dirname, '..');
+const absolutePath = path.isAbsolute(tsFile) ? tsFile : path.resolve(projectRoot, tsFile);
+
+console.log(`🔄 Executing TypeScript file: ${absolutePath}`);
+
 // Execute the TypeScript file by requiring it
 try {
-  require(tsFile);
+  require(absolutePath);
 } catch (error) {
   console.error('❌ Error executing TypeScript file:', error.message);
+  console.error('Full error:', error);
   process.exit(1);
 }
