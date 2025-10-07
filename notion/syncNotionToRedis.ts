@@ -21,8 +21,8 @@ import type {
   NotionSelectProperty,
   NotionTitleProperty,
   NotionUrlProperty,
-} from "../src/utils/notion/notionTypes";
-import { inferKind } from "../src/utils/notion/notionTypes";
+} from "../../src/utils/notion/notionTypes";
+import { inferKind } from "../../src/utils/notion/notionTypes";
 
 export async function syncCampaigns() {
   const redis = new Redis({

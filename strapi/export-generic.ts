@@ -31,7 +31,7 @@ function parseArgs(argv: string[]) {
   return out;
 }
 
-function pickArrayFromModule(mod: any, expName?: string): unknown[] {
+function pickArrayFromModule(mod: Record<string, unknown>, expName?: string): unknown[] {
   if (expName && Object.prototype.hasOwnProperty.call(mod, expName)) {
     const v = mod[expName];
     if (Array.isArray(v)) return v;

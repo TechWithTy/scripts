@@ -3,7 +3,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
 // Import the hero grid data
-import { DEFAULT_GRID } from "../src/data/products/hero";
+import { DEFAULT_GRID } from "../../src/data/products/hero";
 
 function main() {
   const outPath = resolve(process.cwd(), "content/strapi-export/products.json");
