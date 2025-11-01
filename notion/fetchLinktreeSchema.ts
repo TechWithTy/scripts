@@ -110,6 +110,38 @@ function formatSchemaAsTypeScript(schema: NotionDatabaseSchema): string {
 	lines.push(` * Last updated: ${new Date().toISOString()}`);
 	lines.push(" */");
 	lines.push("");
+	lines.push("import type {");
+	lines.push("\tNotionFilesProperty,");
+	lines.push("\tNotionRichTextProperty,");
+	lines.push("\tNotionTitleProperty,");
+	lines.push("\tNotionUrlProperty,");
+	lines.push("\tNotionSelectProperty,");
+	lines.push('} from "./notionTypes";');
+	lines.push("");
+	lines.push("// Additional Notion property types not in notionTypes.ts");
+	lines.push("export type NotionStatusProperty = {");
+	lines.push('\ttype: "status";');
+	lines.push("\tstatus: {");
+	lines.push("\t\tid: string;");
+	lines.push("\t\tname: string;");
+	lines.push("\t\tcolor: string;");
+	lines.push("\t} | null;");
+	lines.push("};");
+	lines.push("");
+	lines.push("export type NotionDateProperty = {");
+	lines.push('\ttype: "date";');
+	lines.push("\tdate: {");
+	lines.push("\t\tstart: string;");
+	lines.push("\t\tend: string | null;");
+	lines.push("\t\ttime_zone: string | null;");
+	lines.push("\t} | null;");
+	lines.push("};");
+	lines.push("");
+	lines.push("export type NotionNumberProperty = {");
+	lines.push('\ttype: "number";');
+	lines.push("\tnumber: number | null;");
+	lines.push("};");
+	lines.push("");
 	lines.push("export interface LinkTreeNotionDatabaseProperties {");
 
 	for (const [propertyName, property] of props) {
@@ -201,7 +233,17 @@ function formatSchemaAsTypeScript(schema: NotionDatabaseSchema): string {
 				typeDefinition = `NotionProperty // Unknown type: ${property.type}`;
 		}
 
-		lines.push(`\t"${propertyName}": ${typeDefinition};`);
+		// Use unquoted property name if it's a valid identifier, otherwise use quoted
+		const isValidIdentifier = /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(propertyName);
+		const propertyKey = isValidIdentifier ? propertyName : `"${propertyName}"`;
+
+		// Ensure semicolon at end if there's a comment
+		const hasComment = typeDefinition.includes("//");
+		const definition = hasComment
+			? typeDefinition.replace(/\s*$/, ";")
+			: `${typeDefinition};`;
+
+		lines.push(`\t${propertyKey}: ${definition}`);
 		lines.push("");
 	}
 
