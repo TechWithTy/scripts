@@ -96,5 +96,3 @@ if (require.main === module) {
 }
 
 export { syncSeoFromNotion, fetchSeoFromNotion, updateStaticSeo, updateDynamicSeo };
-
-
