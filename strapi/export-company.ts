@@ -21,7 +21,7 @@ function main() {
 		values: [], // Add values if available in companyData
 		founded: "2024", // Add founded year if available
 		headquarters: companyData.contactInfo?.address,
-		website: "https://leadorchestra.com", // Add website if available
+		website: "https://dealscale.io", // Add website if available
 		socialLinks: companyData.socialLinks,
 		team: [], // Add team data if available
 		culture: "Innovation-focused, results-driven", // Add culture if available
