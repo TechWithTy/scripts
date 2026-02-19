@@ -1,0 +1,174 @@
+{
+  "object": "page",
+  "id": "2fce9c25-ecb0-8120-94c0-c683d744b6d0",
+  "created_time": "2026-02-03T05:22:00.000Z",
+  "last_edited_time": "2026-02-03T05:22:00.000Z",
+  "created_by": {
+    "object": "user",
+    "id": "35467c7d-f94b-44b9-8fe2-289a2715794d"
+  },
+  "last_edited_by": {
+    "object": "user",
+    "id": "35467c7d-f94b-44b9-8fe2-289a2715794d"
+  },
+  "cover": null,
+  "icon": null,
+  "parent": {
+    "type": "data_source_id",
+    "data_source_id": "2bfe9c25-ecb0-80a2-934e-000b8bb3167a",
+    "database_id": "2bfe9c25-ecb0-801c-90ee-c51fe9ef47cf"
+  },
+  "archived": false,
+  "in_trash": false,
+  "is_locked": false,
+  "properties": {
+    "Who will be responsible for reviewing and acting on the leads?": {
+      "id": "%3F%5EZu",
+      "type": "select",
+      "select": null
+    },
+    "Monthly Budget": {
+      "id": "D%3A~C",
+      "type": "select",
+      "select": null
+    },
+    "Conversion Rate %": {
+      "id": "DTQ%7D",
+      "type": "number",
+      "number": null
+    },
+    "Current CRM": {
+      "id": "DhDo",
+      "type": "rich_text",
+      "rich_text": []
+    },
+    "Interested in these features?": {
+      "id": "GDHS",
+      "type": "multi_select",
+      "multi_select": []
+    },
+    "ICP Category": {
+      "id": "Gwlg",
+      "type": "multi_select",
+      "multi_select": []
+    },
+    "Schedule Kickoff Call": {
+      "id": "G%7BZ_",
+      "type": "date",
+      "date": null
+    },
+    "Qualified": {
+      "id": "H%3FcW",
+      "type": "select",
+      "select": null
+    },
+    "Are you willing to pay for a small pilot to validate lead quality before scaling": {
+      "id": "JqG%3F",
+      "type": "select",
+      "select": null
+    },
+    "If approved, how soon can you actively work and test a new lead list?": {
+      "id": "KRnV",
+      "type": "select",
+      "select": null
+    },
+    "Priority Level": {
+      "id": "Lf~L",
+      "type": "multi_select",
+      "multi_select": []
+    },
+    "Avg Deal Amount ($)": {
+      "id": "PN%5Cm",
+      "type": "number",
+      "number": null
+    },
+    "Existing Lead Lists?": {
+      "id": "W%3BNb",
+      "type": "multi_select",
+      "multi_select": []
+    },
+    "Disqualification Reason": {
+      "id": "c_ZP",
+      "type": "rich_text",
+      "rich_text": []
+    },
+    "Describe Your Ideal Customer Profile": {
+      "id": "fMtZ",
+      "type": "rich_text",
+      "rich_text": []
+    },
+    "Business Type / Niche": {
+      "id": "g%3C%3FV",
+      "type": "multi_select",
+      "multi_select": []
+    },
+    "Deals / Month": {
+      "id": "j%3Afo",
+      "type": "number",
+      "number": null
+    },
+    "Detailed Scraping Instructions ?": {
+      "id": "ljP%40",
+      "type": "rich_text",
+      "rich_text": []
+    },
+    "High-Intent Lead Sources": {
+      "id": "m%3Dyk",
+      "type": "rich_text",
+      "rich_text": []
+    },
+    "Email": {
+      "id": "pnj%40",
+      "type": "rich_text",
+      "rich_text": []
+    },
+    "Main Pain Point(s)": {
+      "id": "q%3A%3Ar",
+      "type": "multi_select",
+      "multi_select": []
+    },
+    "Company Website ?": {
+      "id": "rdqa",
+      "type": "url",
+      "url": null
+    },
+    "Notes": {
+      "id": "ss_%5C",
+      "type": "rich_text",
+      "rich_text": []
+    },
+    "Phone": {
+      "id": "s%7CCh",
+      "type": "rich_text",
+      "rich_text": []
+    },
+    "Can we connect directly to your CRM?": {
+      "id": "vf%3By",
+      "type": "multi_select",
+      "multi_select": []
+    },
+    "Lead Volume / Month": {
+      "id": "x~Tx",
+      "type": "number",
+      "number": null
+    },
+    "Start Date ": {
+      "id": "y%3F%3Eq",
+      "type": "date",
+      "date": null
+    },
+    "What is your expectation for initial validation?": {
+      "id": "%7D%5BqI",
+      "type": "select",
+      "select": null
+    },
+    " Name": {
+      "id": "title",
+      "type": "title",
+      "title": []
+    }
+  },
+  "url": "https://www.notion.so/2fce9c25ecb0812094c0c683d744b6d0",
+  "public_url": null,
+  "request_id": "1f2e69c0-b47d-45f4-a0ab-a975d278b165"
+}

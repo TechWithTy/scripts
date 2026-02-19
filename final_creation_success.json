@@ -1,0 +1,392 @@
+{
+  "object": "page",
+  "id": "2fce9c25-ecb0-819e-8326-c9fef8ebe418",
+  "created_time": "2026-02-03T05:26:00.000Z",
+  "last_edited_time": "2026-02-03T05:26:00.000Z",
+  "created_by": {
+    "object": "user",
+    "id": "35467c7d-f94b-44b9-8fe2-289a2715794d"
+  },
+  "last_edited_by": {
+    "object": "user",
+    "id": "35467c7d-f94b-44b9-8fe2-289a2715794d"
+  },
+  "cover": null,
+  "icon": null,
+  "parent": {
+    "type": "data_source_id",
+    "data_source_id": "2bfe9c25-ecb0-80a2-934e-000b8bb3167a",
+    "database_id": "2bfe9c25-ecb0-801c-90ee-c51fe9ef47cf"
+  },
+  "archived": false,
+  "in_trash": false,
+  "is_locked": false,
+  "properties": {
+    "Who will be responsible for reviewing and acting on the leads?": {
+      "id": "%3F%5EZu",
+      "type": "select",
+      "select": {
+        "id": "f9ffbcff-5471-4368-b855-56ba7733c5aa",
+        "name": "Myself",
+        "color": "purple"
+      }
+    },
+    "Monthly Budget": {
+      "id": "D%3A~C",
+      "type": "select",
+      "select": {
+        "id": "25526f00-de3b-41e7-a12b-cbe271e237e1",
+        "name": "$1k - $3k",
+        "color": "yellow"
+      }
+    },
+    "Conversion Rate %": {
+      "id": "DTQ%7D",
+      "type": "number",
+      "number": 5
+    },
+    "Current CRM": {
+      "id": "DhDo",
+      "type": "rich_text",
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "HubSpot",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "HubSpot",
+          "href": null
+        }
+      ]
+    },
+    "Interested in these features?": {
+      "id": "GDHS",
+      "type": "multi_select",
+      "multi_select": [
+        {
+          "id": "8c5e63ef-e6b5-47cd-9479-d68dbd1f6044",
+          "name": "Lead Enrichment",
+          "color": "pink"
+        }
+      ]
+    },
+    "ICP Category": {
+      "id": "Gwlg",
+      "type": "multi_select",
+      "multi_select": [
+        {
+          "id": "5ec8c698-94c0-4f8f-b8a8-dffc32eaa670",
+          "name": "B2B",
+          "color": "gray"
+        }
+      ]
+    },
+    "Schedule Kickoff Call": {
+      "id": "G%7BZ_",
+      "type": "date",
+      "date": {
+        "start": "2026-02-03T05:26:00.000+00:00",
+        "end": null,
+        "time_zone": null
+      }
+    },
+    "Qualified": {
+      "id": "H%3FcW",
+      "type": "select",
+      "select": {
+        "id": "9ab48125-c529-4de7-a16e-c0614e2ecef7",
+        "name": "Pending",
+        "color": "green"
+      }
+    },
+    "Are you willing to pay for a small pilot to validate lead quality before scaling": {
+      "id": "JqG%3F",
+      "type": "select",
+      "select": {
+        "id": "1cb0edf4-415d-43ba-b430-c1c1f26397c2",
+        "name": "Yes",
+        "color": "blue"
+      }
+    },
+    "If approved, how soon can you actively work and test a new lead list?": {
+      "id": "KRnV",
+      "type": "select",
+      "select": {
+        "id": "c8558193-c526-4ee3-a168-dc7e0c6d5b00",
+        "name": "Immediately",
+        "color": "pink"
+      }
+    },
+    "Priority Level": {
+      "id": "Lf~L",
+      "type": "multi_select",
+      "multi_select": [
+        {
+          "id": "gLxi",
+          "name": "High",
+          "color": "pink"
+        }
+      ]
+    },
+    "Avg Deal Amount ($)": {
+      "id": "PN%5Cm",
+      "type": "number",
+      "number": 5000
+    },
+    "Existing Lead Lists?": {
+      "id": "W%3BNb",
+      "type": "multi_select",
+      "multi_select": [
+        {
+          "id": "e62e46d9-f9f6-47b2-9936-9b4ff5598e5e",
+          "name": "Yes",
+          "color": "default"
+        }
+      ]
+    },
+    "Disqualification Reason": {
+      "id": "c_ZP",
+      "type": "rich_text",
+      "rich_text": []
+    },
+    "Describe Your Ideal Customer Profile": {
+      "id": "fMtZ",
+      "type": "rich_text",
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "SaaS companies in US",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "SaaS companies in US",
+          "href": null
+        }
+      ]
+    },
+    "Business Type / Niche": {
+      "id": "g%3C%3FV",
+      "type": "multi_select",
+      "multi_select": [
+        {
+          "id": "8241b2ba-2437-474e-a82c-c598565efdc3",
+          "name": "Agency",
+          "color": "gray"
+        }
+      ]
+    },
+    "Deals / Month": {
+      "id": "j%3Afo",
+      "type": "number",
+      "number": 10
+    },
+    "Detailed Scraping Instructions ?": {
+      "id": "ljP%40",
+      "type": "rich_text",
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Scrape all emails",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Scrape all emails",
+          "href": null
+        }
+      ]
+    },
+    "High-Intent Lead Sources": {
+      "id": "m%3Dyk",
+      "type": "rich_text",
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "LinkedIn, Google",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "LinkedIn, Google",
+          "href": null
+        }
+      ]
+    },
+    "Email": {
+      "id": "pnj%40",
+      "type": "rich_text",
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "full_test@example.com",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "full_test@example.com",
+          "href": null
+        }
+      ]
+    },
+    "Main Pain Point(s)": {
+      "id": "q%3A%3Ar",
+      "type": "multi_select",
+      "multi_select": [
+        {
+          "id": "05423106-3c6b-4917-a354-92a49d95eafb",
+          "name": "Lead Quality",
+          "color": "green"
+        }
+      ]
+    },
+    "Company Website ?": {
+      "id": "rdqa",
+      "type": "url",
+      "url": "https://full-test.com"
+    },
+    "Notes": {
+      "id": "ss_%5C",
+      "type": "rich_text",
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "This is a full payload test.",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "This is a full payload test.",
+          "href": null
+        }
+      ]
+    },
+    "Phone": {
+      "id": "s%7CCh",
+      "type": "rich_text",
+      "rich_text": [
+        {
+          "type": "text",
+          "text": {
+            "content": "555-000-TEST",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "555-000-TEST",
+          "href": null
+        }
+      ]
+    },
+    "Can we connect directly to your CRM?": {
+      "id": "vf%3By",
+      "type": "multi_select",
+      "multi_select": [
+        {
+          "id": "d8b59fd7-2731-4237-86ce-1f7388fe51e4",
+          "name": "Yes",
+          "color": "blue"
+        }
+      ]
+    },
+    "Lead Volume / Month": {
+      "id": "x~Tx",
+      "type": "number",
+      "number": 1000
+    },
+    "Start Date ": {
+      "id": "y%3F%3Eq",
+      "type": "date",
+      "date": {
+        "start": "2026-02-03T05:26:00.000+00:00",
+        "end": null,
+        "time_zone": null
+      }
+    },
+    "What is your expectation for initial validation?": {
+      "id": "%7D%5BqI",
+      "type": "select",
+      "select": {
+        "id": "ddb9cbbc-194e-441c-bd46-341e768fa929",
+        "name": "10 Verified Leads",
+        "color": "red"
+      }
+    },
+    " Name": {
+      "id": "title",
+      "type": "title",
+      "title": [
+        {
+          "type": "text",
+          "text": {
+            "content": "Test Lead Full Payload",
+            "link": null
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "Test Lead Full Payload",
+          "href": null
+        }
+      ]
+    }
+  },
+  "url": "https://www.notion.so/Test-Lead-Full-Payload-2fce9c25ecb0819e8326c9fef8ebe418",
+  "public_url": null,
+  "request_id": "227cabae-605a-4fff-b347-20ab289633c1"
+}
