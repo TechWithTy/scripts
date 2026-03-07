@@ -4,19 +4,22 @@
  * (next-auth requires Node.js built-ins and is incompatible with Edge Runtime)
  */
 
-import { readFile, writeFile } from 'fs/promises';
-import { readdir } from 'fs/promises';
-import { join } from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { readFile, writeFile } from "fs/promises";
+import { readdir } from "fs/promises";
+import { join } from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const PROJECT_ROOT = join(__dirname, '..');
-const APP_DIR = join(PROJECT_ROOT, 'src', 'app', 'api');
+const PROJECT_ROOT = join(__dirname, "..");
+const APP_DIR = join(PROJECT_ROOT, "src", "app", "api");
 
-async function findRouteFiles(dir: string, fileList: string[] = []): Promise<string[]> {
+async function findRouteFiles(
+	dir: string,
+	fileList: string[] = [],
+): Promise<string[]> {
 	const entries = await readdir(dir, { withFileTypes: true });
 
 	for (const entry of entries) {
@@ -24,17 +27,17 @@ async function findRouteFiles(dir: string, fileList: string[] = []): Promise<str
 
 		if (entry.isDirectory()) {
 			if (
-				entry.name === 'node_modules' ||
-				entry.name === '.next' ||
-				entry.name === 'dist' ||
-				entry.name.startsWith('.') ||
-				entry.name === '_docs' ||
-				entry.name === '_debug'
+				entry.name === "node_modules" ||
+				entry.name === ".next" ||
+				entry.name === "dist" ||
+				entry.name.startsWith(".") ||
+				entry.name === "_docs" ||
+				entry.name === "_debug"
 			) {
 				continue;
 			}
 			await findRouteFiles(fullPath, fileList);
-		} else if (entry.name === 'route.ts' || entry.name === 'route.tsx') {
+		} else if (entry.name === "route.ts" || entry.name === "route.tsx") {
 			fileList.push(fullPath);
 		}
 	}
@@ -44,12 +47,12 @@ async function findRouteFiles(dir: string, fileList: string[] = []): Promise<str
 
 async function checkUsesNextAuth(filePath: string): Promise<boolean> {
 	try {
-		const content = await readFile(filePath, 'utf-8');
+		const content = await readFile(filePath, "utf-8");
 		return (
-			content.includes('next-auth') ||
-			content.includes('getServerSession') ||
-			content.includes('getSession') ||
-			content.includes('NextAuth')
+			content.includes("next-auth") ||
+			content.includes("getServerSession") ||
+			content.includes("getSession") ||
+			content.includes("NextAuth")
 		);
 	} catch {
 		return false;
@@ -58,7 +61,7 @@ async function checkUsesNextAuth(filePath: string): Promise<boolean> {
 
 async function removeEdgeRuntime(filePath: string): Promise<boolean> {
 	try {
-		const content = await readFile(filePath, 'utf-8');
+		const content = await readFile(filePath, "utf-8");
 
 		// Check if file has edge runtime
 		if (!content.includes("export const runtime = 'edge'")) {
@@ -67,16 +70,16 @@ async function removeEdgeRuntime(filePath: string): Promise<boolean> {
 
 		// Remove the line (handle different patterns)
 		let newContent = content
-			.replace(/^export const runtime = 'edge';\s*\n/gm, '') // Standalone line
-			.replace(/^export const runtime = 'edge';\s*$/gm, '') // At end of line
-			.replace(/\n\s*export const runtime = 'edge';\s*\n/g, '\n') // Between lines
-			.replace(/export const runtime = 'edge';\s*\n\s*\n/g, '\n'); // With extra newline
+			.replace(/^export const runtime = 'edge';\s*\n/gm, "") // Standalone line
+			.replace(/^export const runtime = 'edge';\s*$/gm, "") // At end of line
+			.replace(/\n\s*export const runtime = 'edge';\s*\n/g, "\n") // Between lines
+			.replace(/export const runtime = 'edge';\s*\n\s*\n/g, "\n"); // With extra newline
 
 		// Clean up multiple consecutive newlines
-		newContent = newContent.replace(/\n{3,}/g, '\n\n');
+		newContent = newContent.replace(/\n{3,}/g, "\n\n");
 
 		if (newContent !== content) {
-			await writeFile(filePath, newContent, 'utf-8');
+			await writeFile(filePath, newContent, "utf-8");
 			console.log(`✅ Removed edge runtime from ${filePath}`);
 			return true;
 		}
@@ -89,7 +92,7 @@ async function removeEdgeRuntime(filePath: string): Promise<boolean> {
 }
 
 async function main() {
-	console.log('🔍 Finding route files that use next-auth...\n');
+	console.log("🔍 Finding route files that use next-auth...\n");
 
 	const routeFiles = await findRouteFiles(APP_DIR);
 	console.log(`Found ${routeFiles.length} route files\n`);
@@ -113,12 +116,3 @@ async function main() {
 }
 
 main().catch(console.error);
-
-
-
-
-
-
-
-
-

@@ -141,7 +141,7 @@ function mapNotionPageToLinkTree(page: NotionPage): MappedLinkTree {
 	const rawSlug = (props.Slug as NotionRichTextProperty | undefined)
 		?.rich_text?.[0]?.plain_text;
 	const slug = rawSlug?.startsWith("/") ? rawSlug.substring(1) : rawSlug;
-	
+
 	let destination =
 		(props.Destination as NotionUrlProperty | undefined)?.url ??
 		(props.Destination as NotionRichTextProperty | undefined)?.rich_text?.[0]
@@ -426,9 +426,8 @@ function mapNotionPageToLinkTree(page: NotionPage): MappedLinkTree {
 	};
 }
 
-
 // --- MAIN TEST ---
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -454,40 +453,41 @@ async function queryNotionDatabase(databaseId: string) {
 }
 
 async function test() {
-    try {
-        console.log("Testing Notion Connection...");
-        const rawId = process.env.NOTION_REDIRECTS_ID;
-        console.log("NOTION_REDIRECTS_ID:", rawId ? "Found" : "Missing");
-        
-        if (!rawId) throw new Error("Missing NOTION_REDIRECTS_ID");
+	try {
+		console.log("Testing Notion Connection...");
+		const rawId = process.env.NOTION_REDIRECTS_ID;
+		console.log("NOTION_REDIRECTS_ID:", rawId ? "Found" : "Missing");
 
-        const addDashes = (id: string) =>
+		if (!rawId) throw new Error("Missing NOTION_REDIRECTS_ID");
+
+		const addDashes = (id: string) =>
 			id.replace(/^(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})$/, "$1-$2-$3-$4-$5");
 		const dbId = rawId.includes("-")
-				? rawId
-				: rawId.length === 32
-					? addDashes(rawId)
-					: rawId;
+			? rawId
+			: rawId.length === 32
+				? addDashes(rawId)
+				: rawId;
 
-        console.log("Querying database:", dbId);
-        const data = (await queryNotionDatabase(dbId)) as NotionQueryResponse;
-        console.log("Query successful. Results count:", data.results?.length);
+		console.log("Querying database:", dbId);
+		const data = (await queryNotionDatabase(dbId)) as NotionQueryResponse;
+		console.log("Query successful. Results count:", data.results?.length);
 
-        if (data.results && data.results.length > 0) {
-             const results = data.results as NotionPage[];
-             const items = results.map(page => mapNotionPageToLinkTree(page));
-             console.log("Mapped items count:", items.length);
-             
-             items.forEach(item => {
-                 console.log(`- Slug: ${item.slug}, Enabled: ${item.linkTreeEnabled}, Title: ${item.title}`);
-             });
-        } else {
-            console.log("No results found.");
-        }
+		if (data.results && data.results.length > 0) {
+			const results = data.results as NotionPage[];
+			const items = results.map((page) => mapNotionPageToLinkTree(page));
+			console.log("Mapped items count:", items.length);
 
-    } catch (error) {
-        console.error("Test failed:", error);
-    }
+			items.forEach((item) => {
+				console.log(
+					`- Slug: ${item.slug}, Enabled: ${item.linkTreeEnabled}, Title: ${item.title}`,
+				);
+			});
+		} else {
+			console.log("No results found.");
+		}
+	} catch (error) {
+		console.error("Test failed:", error);
+	}
 }
 
 test();

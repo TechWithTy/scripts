@@ -16,10 +16,7 @@ type NotionDatabaseResponse = {
 function normalizeDatabaseId(raw: string): string {
 	return raw.includes("-")
 		? raw
-		: raw.replace(
-				/^(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})$/,
-				"$1-$2-$3-$4-$5",
-			);
+		: raw.replace(/^(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})$/, "$1-$2-$3-$4-$5");
 }
 
 function pickOptionName(
@@ -78,9 +75,21 @@ function buildProperties(
 		? "/linktree?from=internal-test"
 		: "https://calendly.com/dealscale/demo?from=external-test";
 
-	const statusValue = pickOptionName(schema.Status, ["Ready", "Done", "Live"], "Ready");
-	const utmSource = pickOptionName(schema.utm_source, ["linktree", "website"], "linktree");
-	const utmMedium = pickOptionName(schema.utm_medium, ["linktree", "social"], "linktree");
+	const statusValue = pickOptionName(
+		schema.Status,
+		["Ready", "Done", "Live"],
+		"Ready",
+	);
+	const utmSource = pickOptionName(
+		schema.utm_source,
+		["linktree", "website"],
+		"linktree",
+	);
+	const utmMedium = pickOptionName(
+		schema.utm_medium,
+		["linktree", "social"],
+		"linktree",
+	);
 	const utmCampaign = pickOptionName(
 		schema.utm_campaign,
 		["beta2025", "brand2025", "cosw2025"],
@@ -103,11 +112,7 @@ function buildProperties(
 		["True", "False"],
 		"True",
 	);
-	const redirectType = pickOptionName(
-		schema["Redirect Type"],
-		[mode],
-		mode,
-	);
+	const redirectType = pickOptionName(schema["Redirect Type"], [mode], mode);
 	const utmContent = pickOptionName(
 		schema.utm_content,
 		["cta-button", "primary-cta", "test-content"],
@@ -157,7 +162,9 @@ function buildProperties(
 			),
 		},
 		Destination: { url: destination },
-		Thumbnail: { url: "https://images.unsplash.com/photo-1498050108023-c5249f4df085" },
+		Thumbnail: {
+			url: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+		},
 		Image: {
 			files: externalFile(
 				"test-image.jpg",
@@ -194,7 +201,9 @@ function buildProperties(
 		utm_term: maybeSelectOrRichText("utm_term", utmTerm),
 		utm_offer: utmOffer ? { select: { name: utmOffer } } : undefined,
 		utm_icp: maybeSelectOrRichText("utm_icp", utmIcp),
-		gclid: { rich_text: richText(`TEST-GCLID-${mode.toUpperCase()}-${Date.now()}`) },
+		gclid: {
+			rich_text: richText(`TEST-GCLID-${mode.toUpperCase()}-${Date.now()}`),
+		},
 		"Redirects (Calls)": { number: 0 },
 		"Redirects (Clicks)": { number: 0 },
 		"Start Date": { date: { start } },
@@ -208,7 +217,9 @@ function buildProperties(
 	};
 }
 
-function stripUndefined<T extends Record<string, unknown>>(obj: T): Record<string, unknown> {
+function stripUndefined<T extends Record<string, unknown>>(
+	obj: T,
+): Record<string, unknown> {
 	const out: Record<string, unknown> = {};
 	for (const [k, v] of Object.entries(obj)) {
 		if (v !== undefined) out[k] = v;
@@ -256,7 +267,9 @@ async function createEntry(
 
 	if (!createResp.ok) {
 		const err = await createResp.text();
-		throw new Error(`Failed to create ${mode} entry (${createResp.status}): ${err}`);
+		throw new Error(
+			`Failed to create ${mode} entry (${createResp.status}): ${err}`,
+		);
 	}
 
 	const page = (await createResp.json()) as { id: string; url?: string };
@@ -271,15 +284,24 @@ async function run() {
 	}
 
 	const dbId = normalizeDatabaseId(rawDbId);
-	const dbResp = await notionRequest(`/databases/${dbId}`, { method: "GET" }, notionKey);
+	const dbResp = await notionRequest(
+		`/databases/${dbId}`,
+		{ method: "GET" },
+		notionKey,
+	);
 	if (!dbResp.ok) {
 		const err = await dbResp.text();
-		throw new Error(`Failed to read database schema (${dbResp.status}): ${err}`);
+		throw new Error(
+			`Failed to read database schema (${dbResp.status}): ${err}`,
+		);
 	}
 	const dbJson = (await dbResp.json()) as NotionDatabaseResponse;
 	const schema = dbJson.properties ?? {};
 
-	const suffix = new Date().toISOString().replace(/[-:.TZ]/g, "").slice(0, 12);
+	const suffix = new Date()
+		.toISOString()
+		.replace(/[-:.TZ]/g, "")
+		.slice(0, 12);
 	const created = await Promise.all([
 		createEntry(dbId, notionKey, "Internal", suffix, schema),
 		createEntry(dbId, notionKey, "External", suffix, schema),
