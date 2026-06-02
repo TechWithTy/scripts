@@ -1,36 +1,41 @@
 #!/usr/bin/env node
 
 const { spawnSync } = require("node:child_process");
+const { existsSync, mkdirSync } = require("node:fs");
+const { join } = require("node:path");
 
 const shouldSkip =
 	process.env.SKIP_HUSKY === "1" ||
+	process.env.HUSKY === "0" ||
 	process.env.NODE_ENV === "production" ||
 	process.env.CI === "true" ||
-	process.env.CI === "1" ||
-	// Some CIs set CI to other truthy values; treat presence as a hint to skip
-	(typeof process.env.CI !== "undefined" && process.env.CI !== "");
+	process.env.CI === "1";
 
 if (shouldSkip) {
 	console.log(
-		"[prepare] Skipping Husky install because SKIP_HUSKY=1 or NODE_ENV=production.",
+		"Skipping Husky install (SKIP_HUSKY/HUSKY/NODE_ENV signaled non-dev environment).",
 	);
 	process.exit(0);
 }
 
-const result = spawnSync("pnpm", ["exec", "husky"], {
+const projectRoot = process.cwd();
+const huskyDir = join(projectRoot, ".husky");
+
+if (!existsSync(huskyDir)) {
+	mkdirSync(huskyDir, { recursive: true });
+}
+
+const spawnOptions = {
 	stdio: "inherit",
-	shell: true,
-});
+	shell: process.platform === "win32",
+};
 
-if (result.error) {
-	console.warn("[prepare] Unable to run Husky:", result.error.message);
-	process.exit(0);
+const pnpmCmd = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
+const result = spawnSync(pnpmCmd, ["exec", "husky", "install"], spawnOptions);
+
+if (result.status !== 0) {
+	console.error("Failed to install Husky hooks.");
+	process.exit(result.status ?? 1);
 }
 
-// If husky isn't available (e.g., devDeps not installed), don't fail install
-if (typeof result.status === "number" && result.status !== 0) {
-	console.warn("[prepare] Husky not available or returned non-zero. Skipping.");
-	process.exit(0);
-}
-
-process.exit(0);
+console.log("Husky hooks installed successfully.");
