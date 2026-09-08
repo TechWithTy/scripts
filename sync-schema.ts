@@ -189,7 +189,7 @@ const MANUAL_OPTIONS_OVERRIDE: Record<string, string[]> = {
   // Who will be responsible for reviewing and acting on the leads? - select
   "Who will be responsible for reviewing and acting on the leads?": [
     "❌ No dedicated owner yet",
-    "🤖 Automation / outbound system (Deal Scale)",
+    "🤖 Automation / outbound system (Pilot Spring)",
     "👥 Sales rep / SDR",
     "👤 Founder",
     "Myself",
@@ -261,7 +261,7 @@ const MANUAL_OPTIONS_OVERRIDE: Record<string, string[]> = {
   "Interested in these features?": [
     "Look-A-like Audinece Generation (Find leads similar to your top closed clients)",
     "Lead Enrichment - Find Phone numbers emails and socials of leads.",
-    "Automated Outreach Text/Call/Linkedin-Instagram-Facebook  (Deal Scale)",
+    "Automated Outreach Text/Call/Linkedin-Instagram-Facebook  (Pilot Spring)",
     "Search Engine Optimization (Get Discovered On Search Engines)",
     "AI  Engine Optimization (Get suggested by AI)",
     "Lead Enrichment",
